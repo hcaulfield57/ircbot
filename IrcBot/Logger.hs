@@ -1,4 +1,4 @@
-module IrcBot.Log (logIrc) where
+module IrcBot.Logger (logIrc) where
 
 import Control.Concurrent
 import Data.List

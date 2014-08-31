@@ -1,6 +1,5 @@
 module IrcBot.Types
-    ( IrcBot
-    , IrcHandle(..)
+    ( IrcHandle(..)
     , Flag(..)
     ) where
 

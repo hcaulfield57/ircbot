@@ -6,7 +6,7 @@ module IrcBot.Connection
 
 import Control.Monad (when)
 import qualified Data.ByteString.Char8 as B
-import Network.Socket hiding (send)
+import Network.Socket hiding (send, recv)
 import Network.Socket.ByteString
 import Text.Printf
 
