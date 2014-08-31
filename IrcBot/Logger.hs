@@ -1,10 +1,12 @@
 module IrcBot.Logger (logIrc) where
 
 import Control.Concurrent
+import Control.Monad (when)
 import Data.List
 import Network.Socket
 import System.Directory
 import Text.Parsec
+import Text.Parsec.String (Parser)
 
 import IrcBot.Connection
 import IrcBot.Types
@@ -24,11 +26,12 @@ handleList hIrc = do
         Left err -> return ()
         Right ch -> do
             let chans = if any (== ch) (chan hIrc) 
-                        then handleList hIrc
+                        then ""
                         else ch
-                hIrc' = hIrc { chan = chan hIrc ++ ch }
-            forkIO (logChan sockfd ch)
-            handleList hIrc
+                hIrc' = hIrc { chan = chan hIrc ++ [chans] }
+            when (not $ null chans)
+                (forkIO (logChan sockfd ch) >> return ())
+            handleList hIrc'
 
 logChan :: Socket -> String -> IO ()
 logChan sockfd ch = do
@@ -41,19 +44,19 @@ logChan sockfd ch = do
 
 
 parseList :: Parser String
-parseList = do
+parseList =
     try channel <|>
     endList 
 
 channel :: Parser String
 channel = do
-    many $ noneOf '#'
+    many $ noneOf "#"
     ch <- channelName
     return ch
   where channelName = do
-    char '#'
-    many anyChar
-    noneOf " "
+          char '#'
+          many anyChar
+          many $ noneOf " "
 
 endList :: Parser String
 endList = do
