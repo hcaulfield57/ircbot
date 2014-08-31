@@ -1,4 +1,8 @@
-module IrcBot.Connection (connectIrc, sendIrc) where
+module IrcBot.Connection
+    ( connectIrc
+    , sendIrc
+    , recvIrc
+    ) where
 
 import Control.Monad (when)
 import qualified Data.ByteString.Char8 as B
@@ -28,3 +32,6 @@ sendIrc :: Socket -> String -> IO ()
 sendIrc sockfd str = do
     send sockfd . B.pack $ str ++ "\r\n"
     return ()
+
+recvIrc :: Socket -> IO String
+recvIrc sockfd = recv sockfd 512 >>= return . B.unpack

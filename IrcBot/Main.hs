@@ -4,7 +4,7 @@ import System.Console.GetOpt
 import System.Environment
 
 import IrcBot.Connection
-import IrcBot.IrcBot
+import IrcBot.Loop
 import IrcBot.Types
 
 flags :: [OptDescr Flag]
@@ -20,7 +20,7 @@ main = do
     argv <- getArgs
     let hIrc = parseArgs argv
     sockfd <- connectIrc hIrc
-    mainLoop sockfd
+    mainLoop (hIrc { sock = sockfd, chan = [] })
 
 parseArgs :: [String] -> IrcHandle
 parseArgs argv =

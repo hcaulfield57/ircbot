@@ -1,4 +1,4 @@
-module IrcBot.IrcBot (mainLoop) where
+module IrcBot.Loop (mainLoop) where
 
 import Control.Concurrent.MVar
 import Control.Monad
@@ -7,11 +7,11 @@ import Data.List
 import Text.Parsec
 
 import IrcBot.Connection
+import IrcBot.Logger
 import IrcBot.Types
 
-mainLoop :: Socket -> IO ()
+mainLoop :: IrcHandle -> IO ()
 mainLoop hIrc = do
-    mIrc <- newMVar hIrc
-    let options = args hIrc
-    when (any (== Log) options)
-        (logIrc mIrc)
+    when (any (== Log) (args hIrc))
+        (logIrc hIrc)
+    -- other functions later
